@@ -1,0 +1,282 @@
+VER DATOS (console.log)
+
+	 - print_r(): Esta función se utiliza para mostrar información sobre una variable en un formato más legible para los humanos. Se usa 		principalmente para matrices (arrays) y objetos, y muestra el contenido de la variable con una estructura similar a la que tendría en 	código PHP.
+
+	- var_dump(): Esta función es más detallada y muestra información sobre la variable, incluyendo su tipo de dato, tamaño y 	contenido. También indica el tipo de dato y la longitud de las cadenas de texto. Puede ser más útil para depuración en profundidad, 	ya que proporciona más información.
+
+INCLUSION
+
+	- include: La declaración include se utiliza para incluir un archivo en un script PHP. Si el archivo no se encuentra, se generará una 	advertencia, pero el script continuará ejecutándose.
+
+	- include_once: Similar a include, pero asegura que el archivo se incluya solo una vez durante la ejecución del script. Si ya se ha 	incluido previamente, no se volverá a incluir.
+
+	- require: Al igual que include, require se utiliza para incluir un archivo externo. La principal diferencia es que si el archivo no se 	encuentra, se generará un error fatal y el script se detendrá.
+
+	- require_once: Al igual que include_once, require_once garantiza que el archivo se incluya solo una vez. Si ya se ha incluido 	previamente, no se volverá a incluir. Si el archivo no se encuentra, se generará un error fatal y el script se detendrá.
+
+FUNCIONES
+
+	Esto es la lista de parámetros de la función. En este caso, la función acepta dos parámetros. $param1 debe ser de tipo entero (int). 	$param2 es opcional (?string) y puede ser una cadena (string) o null. El = null indica que si no se proporciona un valor para $param2 		al llamar a la función, su valor predeterminado será null. ":array" Esto indica el tipo de dato que la función devolverá. En este caso, la 	función debe devolver un array.
+
+		function nombreFuncion(int $param1, ?string $param2 = null): array{
+        	    		// cuerpo de la funcion
+            			return[...];
+        		}
+
+DOC BLOC
+
+	- Cada doc block puede documentar una declaracion de dos maneras:
+        
+        		1- Indicando en su contenido lo que documenta.
+        		2- Escribiendo el doc block justo antes de la declaracion que documenta.
+
+    	- Un doc block puede incluir cualquier texto que queramos, ademas de "tags" que deseemos agregarle. Un "tag" lleva sintaxis:
+            
+   		- @tag
+
+    	- Opcionalmente seguida de parametros.
+    	Si bien uno puede crear los tags que quiera, existe un standard llamado phpDoc que define unos cuantos tags para documentar 	algunos de los aspectos mas comunes.
+
+	- Usar los tags de phpDoc tiene algunos marcados beneficios:
+		1- Como todo standard, facilita la lectura entre desarrolladores.
+        		2- Podemos usar el programa phpDocumentator para generar una documentacion en HTML a partir del codigo fuente de 		nuestros 	archivos usando los phpDoc.
+       		 3- Algunos editores les puede ofrecer la documentacion en el momento cuando estan llamando a la funcion.
+
+FILE-SYSTEM
+	
+	- "file_put_contents": Sirve para crear un archivo. Recibe 2 parametros:
+		1 - La ruta del archivo (incluyendo el nombre)
+		2 - El contenido
+	Retorna la cantidad de bytes que se escribieron en el archivo. En caso de error retorna false. En caso de que el archivo exista, este 		sera pisado por el nuevo archivo, perdiendo toda la informacion que este contenia en un principio. Es posible evitar este 	comportamiento, en la documentacion explica un flag para esto.
+
+	- "file_get_contents": Sirve para leer un archivo. Solo recibe como parametro la ruta del archivo a leer.
+
+JSON
+
+	- "json_encode": Sirve para convertir un array SECUENCIAL de php a formato JSON, en caso de ser un array ASOCIATIVO lo 	transforma a un objeto. Retorna un string en caso de exito o "false" si falla.
+
+	- "json_decode": Sirve para convertir los datos de un JSON en formato que se pueda manipular con php. Como en php existen tanto 	arrays asociativos como objetos, incluyendo objetos genericos, los objetos de JSON pueden decodifcarse de dos maneras. Por 	defecto, php retorna un objeto de la clase stdObject. Si prefiero un array asociativo, debo pasar como segundo parametro "true".
+
+CLASES
+
+    CONSTANTES
+
+        Es posible definir constantes en las clases y no se puede acceder a ellas a traves de una instancia de la clase, debe ser llamando a la propia clase, con el operador "::". Por ejemplo: "MiClase::CONSTANTE".
+
+        Generalmente las constantes son "publicas" ya que no tiene sentido que sean privadas o protegidas porque al ser constantes no se pueden modificar su valor. Sin embargo, si se puede definir una constante como "private" o "protected" si se quiere que solo sea accesible desde la propia clase o desde las clases hijas.
+
+        Dentro de la clase, si uno quiere acceder a una constante, debe hacerlo con la palabra reservada "self" y el operador "::". Por ejemplo: "self::CONSTANTE". Seria el equivalente a "this" pero para las clases, ya que "this" hace referencia a la instancia de la clase y una instancia no tinene acceso a las constantes.
+
+	ENCAPSULAMIENTO
+
+		Es una forma de programar con el objetivo de que cada clase/objeto del programa pueda interactuar con otros sin saber nada de como funcionan internamente, nos permite que ese funcionamiento interno pueda modificarse tantas veces como queramos, sin generar ningun impacto en el resto del programa. Mientras que lo que reciba y retorne esa clase/objeto sea lo mismo (abstraccion), su funcionamiento interno puede cambiar sin que yo me entere (implementacion). De esta forma logramos que nuestros programas sean mas escalables.
+
+		Dentro del codigo interno de una clase siempre se puede modificar sin riesgo de fallo todo aquello que sea privado. Pero nunca se puede modificar las propiedades y metodos PUBLICOS, o el tipo de dato que se esperaba almacenar en esas variables, es decir, en el caso de tener "private int $edad" yo puedo cambiarlo a "private int $fechaDeNacimiento" pero no puedo cambiar nunca el "int" ya que eso implicaria que todo el codigo externo a la clase que originalmente trabajaba con numeros, ahora deba ser modificado para trabajar con "string" o cualquier otro tipo de dato.
+	
+AUTOLOAD
+
+	"Para evitar tener que usar el comando "require" en mi archivo principal, como suele ser el caso con "index.php", se crea un archivo llamado "autoload". En este archivo, se utiliza una función especial llamada "spl_autoload_register". Una manera práctica de emplear esta función es al proporcionarle una "función anónima" como argumento.
+
+	En esa función anónima, se recoge el nombre de la clase que mi programa necesita para funcionar. Por ejemplo, cuando escribo "new NombreClase", el nombre "NombreClase" se guarda como parte de esta función. Dado que el nombre de la clase suele 	coincidir con el nombre del archivo que la contiene, podemos aprovechar esto. La función anónima retorna un comando "require_once" que carga automáticamente el archivo de la clase que necesitamos."
+
+	Esta explicación enfatiza cómo el proceso de autoloading evita el proceso manual de "requiring" clases y cómo la función anónima toma el nombre de la clase y utiliza "require_once" para cargar automáticamente el archivo correspondiente.
+
+	OTRA DEFINICION 
+
+		Este código utiliza la función spl_autoload_register para registrar una función que se ejecutará automáticamente cuando se intente cargar una clase que aún no ha sido definida en el código. El propósito principal de este enfoque es permitir la carga automática de clases sin tener que escribir require o include manualmente para cada clase en el programa.
+
+		En resumen, este código define una función anónima que se registra como un cargador automático de clases utilizando 		spl_autoload_register. Cuando se intenta utilizar una clase que aún no ha sido definida, esta función se activa. La función construye la ruta del archivo de clase basándose en el nombre de la clase y la ubicación de la carpeta "classes". Luego, verifica si el archivo existe y, si es así, lo incluye en el código utilizando require_once. De esta manera, las clases se cargan automáticamente cuando se necesitan.
+
+PDO
+
+    Es una clase nativa de php, utilizada para conectarse a la base de datos. Para ello es necesario antes definir algunas constantes como:
+
+        - DB_HOST: El host de la base de datos.
+        - DB_USER: El usuario de la base de datos.
+        - DB_PASS: La contraseña del usuario de la base de datos.
+        - DB_BASE: El nombre de la base de datos.
+        - DB_DSN: El DSN de la base de datos. Es una cadena de texto que contiene información sobre el tipo de base de datos, el host, el nombre de la base de datos y el charset. Por ejemplo: "mysql:host=localhost;dbname=nombreBase;charset=utf8mb4".
+
+    Luego, se crea una instancia de la clase PDO, pasandole como argumento el DSN, el usuario y la contraseña. Esta instancia es la que se utiliza para realizar las consultas a la base de datos. Por otro lado, es necesario setear el atributo "ERRMODE" de la instancia de PDO, para que en caso de error, se lance una excepción.
+
+        $db = new PDO(DB_DSN, DB_USER, DB_PASS);
+        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    Generalmente esta instancia se hace dentro de un bloque try-catch, ya que puede fallar si los datos de conexión son incorrectos.
+
+        try{
+            $db = new PDO(DB_DSN, DB_USER, DB_PASS);
+        }catch(PDOException $e){
+            echo "Error de conexion: " . $e->getMessage();
+        }
+
+    Luego de crear la instancia, podemos armar la "query" (que es una cadena de texto) y con el metodo "prepare" de la instancia de PDO, preparamos la consulta. Esto nos devuelve un objeto de tipo "PDOStatement", que es el que utilizamos para ejecutar la consulta. Para ejecutar la consulta, utilizamos el metodo "execute" del objeto "PDOStatement". 
+
+        $query = "SELECT * FROM usuarios;
+        $stmt = $db->prepare($query);
+        $stmt->execute();
+
+    Con el metodo "fecth" del objeto "PDOStatement" podemos obtener los resultados de la consulta. Este metodo devuelve el primer resultado de la consulta, y cada vez que se lo llama, devuelve el siguiente resultado. Si no hay mas resultados, devuelve "false".
+
+        $result = $stmt->fetch();
+
+    Sin embargo, este resultado tiene una estructura que no es muy comoda de utilizar. Para ello, tenemos el metodo "setFetchMode" del objeto "PDOStatement", este metodo recibe como primer argumento el formato de "fetcheo". Los posibles valores estan definidos en constantes de la clase PDO.
+
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        while($fila = $stmt->fetch()){
+            echo "<pre>";
+            print_r($fila);
+            echo "</pre>";
+        }
+
+    Si bien fetch devuelve un solo resultado, existe el metodo "fetchAll" que devuelve todos los resultados de la consulta en un array. Este metodo tambien recibe como argumento el formato de "fetcheo".
+
+        $stmt->setFetchMode(PDO::FETCH_ASSOC);
+        $filas = $stmt->fetchAll();
+        foreach($filas as $fila){
+            echo "<pre>";
+            print_r($fila);
+            echo "</pre>";
+        }
+
+    Normalmente no queremos tener cada fila como un array, sino como un objeto. Si creamos una "clase" que matchee los campos del resultset, es decir, que represente a la tabla de la base de datos, podemos pedirle a PDOStatement que cada fila se tranforme en una instancia de esa clase (osea un objeto), en vez de un array. Para ello, utilizamos el metodo "setFetchMode" y pasamos como modo de fetcheo "FETCH_CLASS" y como segundo argumento el nombre de la clase. Este nombre se puede obtener facilmente con la constante magica "::class" de la clases de php.
+
+        require_once "classes/Usuario.php";
+
+        ...codigo de conexion...
+
+        $stmt->setFetchMode(PDO::FETCH_CLASS, Usuario::class);
+
+REDIRECCIONAMIENTO
+
+    Luego de una solicitud "POST" a un archivo php, es recomendable redireccionar al usuario a otra pagina, para evitar que se envien multiples veces los datos del formulario. Para ello, se utiliza la funcion "header" de php, pasandole como argumento la ruta a la que se quiere redireccionar. Es importante que esta funcion se ejecute antes de que se envie cualquier tipo de contenido al navegador, por lo que es recomendable que se ejecute antes de cualquier etiqueta "html".
+
+        header("Location: index.php"); 
+        exit:
+
+    Es importante que luego de ejecutar la funcion "header", se ejecute la funcion "exit" para que el codigo no siga ejecutandose. Esto es porque la funcion "header" no detiene la ejecucion del codigo, sino que simplemente envia una cabecera al navegador, indicandole que se redireccione a otra pagina. Si no se ejecuta la funcion "exit", el codigo seguira ejecutandose y se enviara el contenido de la pagina al navegador, lo cual no es lo que queremos.
+
+    Cabe destacar que las paginas que fueron redireccionadas con la funcion "header" no se guardan en el historial del navegador, por lo que no se puede volver atras con el boton de "volver" del navegador.
+
+SUBIR UNA IMAGEN
+
+    Para poder enviar un archivo con un <input> de tipo "file", el form debe tener el atributo "enctype" con el valor "multipart/form-data". Esto es porque el navegador por defecto envia los datos del formulario en formato "application/x-www-form-urlencoded", que es un formato que no permite enviar archivos. Por lo tanto, es necesario cambiar el formato de envio de los datos del formulario. Y también es necesario que el metodo del form sea "POST" ya que el metodo "GET" no permite enviar archivos.
+
+    Para verificar que el archivo se envio correctamente deberia poder ver que el nombre del campo del archivo NO aparece en el array "$_POST" sino en el array "$_FILES". Esto es porque los archivos se envian en un array aparte de los datos del formulario. Este array tiene como clave el nombre del campo del archivo y como valor un array con los siguientes datos:
+
+        - name: El nombre del archivo.
+        - full_path: La ruta completa del archivo.
+        - type: El tipo de archivo.
+        - tmp_name: La ruta temporal donde se guardo el archivo. Si no se mueve de esta ruta, el archivo se borrara automaticamente.
+        - error: El codigo de error, en caso de que haya ocurrido alguno.
+        - size: El tamaño del archivo. 
+
+FUNCIONES NATIVAS DE PHP
+
+    - isset(): verifica si una variable está definida (true) o no (false).
+    - empty(): retorna true si la variable es "falsy" (false, 0, "", null, [], etc) o false si no lo es.
+    - move_uploaded_file(): mueve un archivo de la ruta temporal a la ruta especificada.
+    - explode(): divide un string en un array, utilizando como separador el primer argumento.
+    - strlen(): retorna la cantidad de caracteres de un string.
+    - in_array(): verifica si un valor existe en un array.
+    - is_numeric(): verifica si un valor es numerico.
+    - is_int(): verifica si un valor es un numero entero.
+    - filter_var($this->data[$field], FILTER_VALIDATE_EMAIL): verifica si un valor es un email valido. Como segundo argumento recibe una constante de   la clase "FILTER_VALIDATE" que indica el tipo de validacion que se quiere hacer. Las constantes posibles son:
+        - FILTER_VALIDATE_EMAIL: Valida que el valor sea un email valido.
+        - FILTER_VALIDATE_URL: Valida que el valor sea una URL valida.
+        - FILTER_VALIDATE_IP: Valida que el valor sea una IP valida.
+        - FILTER_VALIDATE_INT: Valida que el valor sea un numero entero valido.
+        - FILTER_VALIDATE_FLOAT: Valida que el valor sea un numero decimal valido.
+        - FILTER_VALIDATE_BOOLEAN: Valida que el valor sea un booleano valido.
+    - unset(): elimina una variable.
+    - unlink(): elimina un archivo.
+    - chmod(): cambia los permisos de un archivo.
+    - substr(): retorna una parte de un string, desde el caracter indicado por el segundo argumento hasta el caracter indicado por el tercer argumento.
+    - str_replace(): reemplaza todas las ocurrencias de un string por otro string.
+    - DIRECTORY_SEPARATOR: es una constante de php que contiene el separador de directorios del sistema operativo en el que se esta ejecutando el script.
+    - FILTER_VALIDATE_EMAIL: es una constante de php que se utiliza como segundo argumento de la funcion "filter_var" para validar que un valor sea un email valido.
+    - openssl_random_pseudo_bytes(): genera un string de bytes aleatorios. Se utiliza para generar un token aleatorio. Recibe como argumento la cantidad de bytes que se quieren generar.
+    - bin2hex(): convierte un string de bytes a un string hexadecimal.
+    - implode(): convierte un array en un string, utilizando como separador el primer argumento.
+
+VARIABLES DE SESIÓN
+
+    Las variables de sesion son variables que se guardan en el servidor y que estan asociadas a un usuario. Estas variables se guardan en un array llamado "$_SESSION". Para poder utilizar las variables de sesion, es necesario llamar a la funcion "session_start()" antes de cualquier etiqueta "html". Esta funcion crea una cookie en el navegador del usuario, que contiene un identificador de sesion. Este identificador es el que se utiliza para identificar al usuario y asociarle las variables de sesion.
+
+    Para guardar una variable de sesion, simplemente se asigna un valor a una clave del array "$_SESSION". Por ejemplo:
+
+        $_SESSION["nombre"] = "Juan";
+
+    Para acceder a una variable de sesion, simplemente se accede a una clave del array "$_SESSION". Por ejemplo:
+
+        echo $_SESSION["nombre"];
+
+    Para eliminar una variable de sesion, se utiliza la funcion "unset" pasandole como argumento la clave del array "$_SESSION". Por ejemplo:
+
+        unset($_SESSION["nombre"]);
+
+    Para eliminar todas las variables de sesion, se utiliza la funcion "session_destroy()". Esta funcion elimina todas las variables de sesion y la cookie de sesion del navegador del usuario. Sin embargo, esta funcion no se ejecuta inmediatamente, sino que se ejecuta cuando se termina de ejecutar el script. Por lo tanto, si se quiere redireccionar al usuario luego de eliminar las variables de sesion, es necesario utilizar la funcion "header" y la funcion "exit" para que el codigo no siga ejecutandose.
+
+        session_destroy();
+        header("Location: index.php");
+        exit;
+
+    Es importante destacar que las variables de sesion se guardan en el servidor, por lo que no se pueden ver desde el navegador. Sin embargo, si se puede ver el identificador de sesion que se guarda en la cookie de sesion. Para ello, se puede utilizar la extension "EditThisCookie" de chrome. Esta extension permite ver las cookies de la pagina y modificarlas. Si se modifica el identificador de sesion, se puede acceder a las variables de sesion de otro usuario. Por lo tanto, es importante que las variables de sesion no contengan informacion sensible, ya que cualquier usuario podria acceder a ellas.
+
+    Por otro lado, es importante destacar que las variables de sesion se guardan en el servidor, por lo que si se cierra el navegador, las variables de sesion no se pierden. Esto es porque la cookie de sesion se guarda en el navegador, pero el array "$_SESSION" se guarda en el servidor. Por lo tanto, si se cierra el navegador y se vuelve a abrir, la cookie de sesion se envia al servidor, y el servidor utiliza el identificador de sesion para acceder al array "$_SESSION" y recuperar las variables de sesion del usuario.
+
+CRON JOB
+
+    Un cron job es una tarea que se ejecuta periodicamente en el servidor. Para crear un cron job, es necesario crear un archivo php que contenga la tarea que se quiere ejecutar. Luego, se debe crear un archivo "cron.php" que contenga el codigo para ejecutar el cron job. Este archivo debe contener el codigo para conectarse a la base de datos y luego ejecutar el archivo php que contiene la tarea. Por ejemplo:
+
+        require_once "conexion.php";
+        require_once "tarea.php";
+
+    Luego, se debe crear un archivo "cron.sh" que contenga el codigo para ejecutar el archivo "cron.php". Por ejemplo:
+
+        php /home/usuario/public_html/cron.php
+
+    Luego, se debe crear un archivo "cron.txt" que contenga el codigo para ejecutar el archivo "cron.sh". Por ejemplo:
+
+        0 0 * * * /home/usuario/public_html/cron.sh
+
+    Luego, se debe ejecutar el siguiente comando para agregar el cron job al servidor:
+
+        crontab cron.txt
+
+    Este comando agrega el cron job al servidor. El cron job se ejecutara todos los dias a las 00:00. Para modificar la frecuencia de ejecucion del cron job, se debe modificar el archivo "cron.txt" y luego ejecutar el comando "crontab cron.txt" nuevamente.
+
+    Es importante destacar que el cron job se ejecuta en el servidor, por lo que no se puede acceder a las variables de sesion del usuario. Por lo tanto, si se quiere acceder a las variables de sesion del usuario, es necesario pasarle el identificador de sesion como parametro al archivo "cron.php". Por ejemplo:
+
+        php /home/usuario/public_html/cron.php PHPSESSID=123456789
+
+    Luego, en el archivo "cron.php" se debe obtener el identificador de sesion del usuario y asignarlo a la variable global "$_COOKIE". Por ejemplo:
+
+        $_COOKIE["PHPSESSID"] = $_GET["PHPSESSID"];
+
+    De esta forma, se puede acceder a las variables de sesion del usuario desde el archivo "cron.php".
+
+    Es importante destacar que el cron job se ejecuta en el servidor, por lo que no se puede acceder a las variables de entorno del usuario. Por lo tanto, si se quiere acceder a las variables de entorno del usuario, es necesario pasarle las variables de entorno como parametro al archivo "cron.php". Por ejemplo:
+
+        php /home/usuario/public_html/cron.php VAR1=valor1 VAR2=valor2
+
+    Luego, en el archivo "cron.php" se debe obtener las variables de entorno del usuario y asignarlas a la variable global "$_ENV". Por ejemplo:
+    
+            $_ENV["VAR1"] = $_GET["VAR1"];
+            $_ENV["VAR2"] = $_GET["VAR2"];
+
+    De esta forma, se puede acceder a las variables de entorno del usuario desde el archivo "cron.php".
+
+COSAS PARA CORREGIR
+
+    - Checkear todo el html
+    - Limpiar el css del admin.css
+    - Resolver el problema del getAll de Products
+    - Cambiarle el nombre a todas las clases que esten en plural
+
+ROLES DE USUARIO
+
+    Existen 2 formas para encarar esta funcion:
+
+    - Sistema de Permisos: Investigar
+    - Sistema de Roles (role-based access control - RBAC): Investigar
